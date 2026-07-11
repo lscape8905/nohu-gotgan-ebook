@@ -514,6 +514,13 @@ form.addEventListener('submit', async (e) => {
       body: new FormData(form)
     });
     if (!res.ok) throw new Error('send failed');
+    const data = await res.json();
+    if (String(data.success) !== 'true') {
+      // 서버가 접수를 거절한 경우 (활성화 미완료 등) — 성공으로 표시하지 않는다
+      msg.textContent = '전송에 실패했습니다. 잠시 후 다시 시도하시거나, lscape8905@gmail.com으로 직접 메일을 보내주세요.';
+      msg.classList.add('err');
+      return;
+    }
     msg.textContent = '신청이 완료되었습니다! 확인 후 입력하신 이메일로 e북을 보내드릴게요.';
     msg.classList.add('ok');
     form.reset();
